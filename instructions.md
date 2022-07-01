@@ -27,10 +27,12 @@ Create dockerfile (Visual Studio)
 ### Get credentials for acr
     az acr credential show --name myregistry --resource-group azure-containers-demo-rg 
 
+(Store output of the above command as it will be used later)
+
 ### Login in docker, tag and push image
     docker login myregistry.azurecr.io
-    docker tag helloworld2app myregistry.azurecr.io/helloworld2app:v2
-    docker push myregistry.azurecr.io/helloworld2app:v2
+    docker tag helloworld2app myregistry.azurecr.io/helloworld2app:latest
+    docker push myregistry.azurecr.io/helloworld2app:latest
 
 ### Check if image is pushed
 
