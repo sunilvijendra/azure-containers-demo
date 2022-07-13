@@ -20,7 +20,7 @@ Create dockerfile (Visual Studio)
     az group create --name azure-containers-demo-rg --location eastus
 
 ### Create Azure Container Registry
-    az acr create --name <unique name> --resource-group azure-containers-demo-rg --sku standard --admin-enabled true
+    az acr create --name <unique name> --resource-group azure-containers-demo-rg --sku premium --admin-enabled true
 
 (Assume \<unique name\> is "myregistry" for future reference)
 
@@ -29,7 +29,7 @@ Create dockerfile (Visual Studio)
 
 (Store output of the above command as it will be used later)
 
-### Login in docker, tag and push image
+### Login in docker, tag and push image (run on local system)
     docker login myregistry.azurecr.io
     docker tag helloworld2app myregistry.azurecr.io/helloworld2app:latest
     docker push myregistry.azurecr.io/helloworld2app:latest
@@ -40,7 +40,7 @@ Create dockerfile (Visual Studio)
 
 ### Create container instance
 
-    az container create --resource-group azure-containers-demo-rg --name myinstance --image myregistry.azurecr.io/helloworld2app:v2 --dns-name-label mydnsname --registry-username <username> --registry-password <password>
+    az container create --resource-group azure-containers-demo-rg --name myinstance --image myregistry.azurecr.io/helloworld2app:v2 --dns-name-label mydnsname --registry-username <username> --registry-password <password> --ports 5170
 
 ### URL where container running
 
