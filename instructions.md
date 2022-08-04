@@ -10,10 +10,10 @@
 
 ### Containerize the app
 
-Create dockerfile (Visual Studio)
+Create dockerfile (Visual Studio). **Note** Below port 5164 is the port specified in Dockerfile. With docker run command port is mapped to 8080
 
-    docker build –t helloworld2app .​
-    docker run -p 8080:5077 -d –-name helloworld2app_sample helloworld2app​
+    docker build .\ -t helloworldapp
+    docker run -p 8080:5164 -d --name helloworldapp_container helloworldapp
     docker ps -a
 
 ### Create a resource group
@@ -22,28 +22,31 @@ Create dockerfile (Visual Studio)
 ### Create Azure Container Registry
     az acr create --name <unique name> --resource-group azure-containers-demo-rg --sku premium --admin-enabled true
 
-(Assume \<unique name\> is "myregistry" for future reference)
+(Assume \<unique name\> is "azurehwcontainer" for future reference)
 
 ### Get credentials for acr
-    az acr credential show --name myregistry --resource-group azure-containers-demo-rg 
+    az acr credential show --name azurehwcontainer --resource-group azure-containers-demo-rg 
 
 (Store output of the above command as it will be used later)
 
 ### Login in docker, tag and push image (run on local system)
-    docker login myregistry.azurecr.io
-    docker tag helloworld2app myregistry.azurecr.io/helloworld2app:latest
-    docker push myregistry.azurecr.io/helloworld2app:latest
+    docker login azurehwcontainer.azurecr.io
+    docker tag helloworldapp azurehwcontainer.azurecr.io/helloworldapp:latest
+    docker push azurehwcontainer.azurecr.io/helloworldapp:latest
 
+### Login to ACR
+    
 ### Check if image is pushed
 
-    az acr repository list --name myregistry --resource-group azure-containers-demo-rg
+    az acr repository list --name azurehwcontainer --resource-group azure-containers-demo-rg
 
-### Create container instance
+### Create container instance 
+**Note** ACI does not support port mapping yet! Hence, ensure the port specified is same as one in Dockerfile
 
-    az container create --resource-group azure-containers-demo-rg --name myinstance --image myregistry.azurecr.io/helloworld2app:v2 --dns-name-label mydnsname --registry-username <username> --registry-password <password> --ports 5170
+    az container create --resource-group azure-containers-demo-rg --name azurehwcontainerinstance --image azurehwcontainer.azurecr.io/helloworld2app:latest --dns-name-label azurehwcontainerdemo --registry-username azurehwcontainer --registry-password <password> --ports 5164
 
 ### URL where container running
 
-    az container show --resource-group azure-containers-demo-rg --name myinstance --query ipAddress.fqdn
+    az container show --resource-group azure-containers-demo-rg --name azurehwcontainerinstance --query ipAddress.fqdn
 
 ### Open browser and enter URL from above output
